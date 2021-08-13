@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [Header("Script References")]
     public Player player;
     public GameObject playerObject;
+    public AudioManager audioManager;
 
     [Header("Text References")]
     public TMP_Text timerText;
@@ -67,7 +68,10 @@ public class GameManager : MonoBehaviour
             {
                 gameTimeRemaining = 0;
                 isGameRunning = false;
-                // Do More special effects
+                // Do More special effects + handle audio
+                audioManager.PlayAudio(audioManager.roosterCrow, 1f);
+                audioManager.StopAudio();
+
                 playerObject.SetActive(false);
             }
             // Round float to int Source Code: discussed in week 3-4 class @ read up on http://docs.unity3d.com/ScriptReference/Mathf.Round.html
@@ -120,7 +124,9 @@ public class GameManager : MonoBehaviour
     public void CollectBonus(int amount, Vector2 position)
     {
         UpdateScore(amount);
-        Instantiate(coinEffect, position, transform.rotation); 
+        Instantiate(coinEffect, position, transform.rotation);
+        audioManager.PlayAudio(audioManager.coinPickUp, 1f);
+        
     }
 }
 

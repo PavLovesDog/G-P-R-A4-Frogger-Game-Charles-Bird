@@ -13,6 +13,7 @@ TagManager:
   - Finish 4
   - Finish 5
   - Coin
+  - Bonus
   layers:
   - Default
   - TransparentFX

@@ -16,15 +16,10 @@ public class Player : MonoBehaviour
     public bool playerCanMove = false; //Can the player currently move?
     public int facingDirection;
     public float moveSpeed = 5f;
+    public float moveVolume = 0.5f;
     public Vector2 startingPosition;
-    
-
-    public Vector3 endPos1 = new Vector3(-7.5f, 14.5f, 10);
-    public Vector3 endPos2 = new Vector3(-0.5f, 14.5f, 10);
-    public Vector3 endPos3 = new Vector3(6.5f, 14.5f, 10);
-    public Vector3 endPos4 = new Vector3(-3.5f, 15.5f, 10);
-    public Vector3 endPos5 = new Vector3(3.5f, 15.5f, 10);
-
+    public Vector3[] endPos;
+ 
     [Header("References")]
     public Transform movePoint;
     public LayerMask StopsMovement; // layer mask to check for colliderable objects the player cant move on
@@ -80,6 +75,11 @@ public class Player : MonoBehaviour
             xMovement = Input.GetAxisRaw("Horizontal");
             yMovement = Input.GetAxisRaw("Vertical");
         }
+        else
+        {
+            xMovement = 0f;
+            yMovement = 0f;
+        }
 
         // Increment player 1 unit on grid
         Vector3 incrementX = new Vector3(xMovement, 0, 0);
@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(xMovement) == 1f) // X axis, use absolute value to check for left or right (1 or -1)
             {
                 // Play AudioSource
-                audioManager.PlayAudio(audioManager.moveSound);
+                audioManager.PlayAudio(audioManager.moveSound, moveVolume);
 
                 //Check if colliders block path ////////////MAY NEED TO REMOVE
                 if (!Physics2D.OverlapCircle(movePoint.position + incrementX, 0.2f, StopsMovement)) // if there is NOT a collider ahead, we may move
@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(yMovement) == 1f) // Y axis
             {
                 // Play AudioSource
-                audioManager.PlayAudio(audioManager.moveSound);
+                audioManager.PlayAudio(audioManager.moveSound, moveVolume);
 
                 if (!Physics2D.OverlapCircle(movePoint.position + incrementY, 0.2f, StopsMovement))
                 {
@@ -142,19 +142,9 @@ public class Player : MonoBehaviour
             //Minus life here and handle auio + visual
             playerLivesRemaining--;
             Instantiate(deathParticles, transform.position, Quaternion.identity);
-            audioManager.PlayAudio(audioManager.deathSound); // Audio is set up through the Audio Manager gameobject because audio cannot play from unactive gameobjects
+            audioManager.PlayAudio(audioManager.deathSound, 1f); // Audio is set up through the Audio Manager gameobject because audio cannot play from unactive gameobjects
 
-            if (playerLivesRemaining > 0)
-            {
-            //reset position if lives left
-            transform.position = startingPosition;
-            movePoint.position = startingPosition;
-            } 
-            else // if no lives left
-            {
-                gameObject.SetActive(false);
-                gameManager.isGameRunning = false;    
-            }
+            CheckLivesRemaining();
         }
 
         if (collision.gameObject.CompareTag("Coin"))
@@ -163,6 +153,11 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
             //spawn effect
             //play sound
+        }
+
+        if (collision.gameObject.CompareTag("Bonus"))
+        {
+            gameManager.CollectBonus(50, collision.transform.position);
         }
     }
 
@@ -181,7 +176,7 @@ public class Player : MonoBehaviour
         {
             //Decrement finish spots left
             gatesLeft--;
-            Instantiate(doorPrefab, endPos1, transform.rotation); // shut door and save
+            Instantiate(doorPrefab, endPos[0], transform.rotation); // shut door and save
             //Add score
             gameManager.UpdateScore(20);
             //check gates left
@@ -193,7 +188,7 @@ public class Player : MonoBehaviour
         {
             //Decrement finish spots left
             gatesLeft--;
-            Instantiate(doorPrefab, endPos2, transform.rotation); // shut door and save
+            Instantiate(doorPrefab, endPos[1], transform.rotation); // shut door and save
             //Add score
             gameManager.UpdateScore(20);
             //check gates left
@@ -205,7 +200,7 @@ public class Player : MonoBehaviour
         {
             //Decrement finish spots left
             gatesLeft--;
-            Instantiate(doorPrefab, endPos3, transform.rotation); // shut door and save
+            Instantiate(doorPrefab, endPos[2], transform.rotation); // shut door and save
             //Add score
             gameManager.UpdateScore(20);
             //check gates left
@@ -217,7 +212,7 @@ public class Player : MonoBehaviour
         {
             //Decrement finish spots left
             gatesLeft--;
-            Instantiate(flagPrefab, endPos4, transform.rotation); // raise flag and save
+            Instantiate(flagPrefab, endPos[3], transform.rotation); // raise flag and save
             //Add score
             gameManager.UpdateScore(20);
             //check gates left
@@ -232,7 +227,7 @@ public class Player : MonoBehaviour
         {
             //Decrement finish spots left
             gatesLeft--;
-            Instantiate(flagPrefab, endPos5, transform.rotation); // raise flag and save
+            Instantiate(flagPrefab, endPos[4], transform.rotation); // raise flag and save
             //Add score
             gameManager.UpdateScore(20);
             //check gates left
@@ -289,10 +284,14 @@ public class Player : MonoBehaviour
 
     void FinishGateCheck()
     {
+        //Audio
+        audioManager.PlayAudio(audioManager.gateClosed, 2f);
         // Check for last door
         if (gatesLeft == 0)
         {
             //End game, YOU WIN!
+            audioManager.PlayAudio(audioManager.victory, 2f);
+            audioManager.StopAudio();
         }
         // reset player
         StartCoroutine("FinishDelay");
@@ -305,6 +304,23 @@ public class Player : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+        }
+    }
+
+    public void CheckLivesRemaining()
+    {
+        if (playerLivesRemaining > 0)
+        {
+            //reset position if lives left
+            transform.position = startingPosition;
+            movePoint.position = startingPosition;
+        }
+        else // if no lives left
+        {
+            gameObject.SetActive(false);
+            gameManager.isGameRunning = false;
+            audioManager.PlayAudio(audioManager.GameOver, 1f);
+            audioManager.StopAudio();
         }
     }
 

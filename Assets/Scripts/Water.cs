@@ -43,12 +43,11 @@ public class Water : MonoBehaviour
     {
         yield return new WaitForSeconds(0.05f); // given player a chance to get back on log
         if (!playerScript.isOnLog)
-        {
-            //TODO WHy DOES ALL THIS RUN MULTIPLE TIMES?? 
+        { 
             // minus life
             playerScript.playerLivesRemaining--;
             // play audio
-            audioManager.PlayAudio(audioManager.drownSound);
+            audioManager.PlayAudio(audioManager.drownSound, 1f);
 
             if (playerScript.playerLivesRemaining > 0)
             {
@@ -58,8 +57,8 @@ public class Water : MonoBehaviour
             }
             else // if no lives left
             {
-                player.SetActive(false); // kill player
-                gameManager.isGameRunning = false; // end game scripts
+               //stop game!
+                playerScript.CheckLivesRemaining();
             }
             StopCoroutine("waitBeforeKill"); // stop coroutine before it loops
         }
