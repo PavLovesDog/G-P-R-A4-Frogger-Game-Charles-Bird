@@ -298,8 +298,8 @@ public class Player : MonoBehaviour
         //remove a soldier from start area
         if (gatesLeft >= 1)
         {
-            soldiers[Random.Range(0, 3)].SetActive(false); // sometimes this chooses the wrong frog..
-                                                           //frogSoldiers.Remove(soldiers[0]);
+            soldiers[-1 + gatesLeft].SetActive(false);
+                                                           
         }
         else
         {
