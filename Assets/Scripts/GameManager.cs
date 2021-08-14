@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public AudioManager audioManager;
 
     [Header("Text References")]
+    public GameObject mainMenu;
     public TMP_Text timerText;
     public TMP_Text currentScoreUI;
     public GameObject[] hearts;
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Game loop bool begin
-        isGameRunning = true;
+        isGameRunning = false;
 
         //set up timer
         gameTimeRemaining = totalGameTime;
@@ -57,6 +58,14 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Testing
+        if (Input.GetMouseButtonDown(0))
+        {
+            isGameRunning = true;
+            mainMenu.SetActive(false);
+        }
+
+
         HandleHearts();
 
         // handle timer
