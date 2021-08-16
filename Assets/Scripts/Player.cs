@@ -291,7 +291,7 @@ public class Player : MonoBehaviour
         {
             //End game, YOU WIN!
             audioManager.PlayAudio(audioManager.victory, 2f);
-            audioManager.StopAudio();
+            audioManager.StopOverworldAudio();
         }
         // reset player
         StartCoroutine("FinishDelay");
@@ -320,7 +320,7 @@ public class Player : MonoBehaviour
             gameObject.SetActive(false);
             gameManager.isGameRunning = false;
             audioManager.PlayAudio(audioManager.GameOver, 1f);
-            audioManager.StopAudio();
+            audioManager.StopOverworldAudio();
         }
     }
 

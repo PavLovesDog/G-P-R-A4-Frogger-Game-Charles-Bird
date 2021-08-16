@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Text References")]
     public GameObject mainMenu;
+    public GameObject pauseMenu;
     public TMP_Text timerText;
     public TMP_Text currentScoreUI;
     public GameObject[] hearts;
@@ -63,6 +64,30 @@ public class GameManager : MonoBehaviour
         {
             isGameRunning = true;
             mainMenu.SetActive(false);
+            pauseMenu.SetActive(false);
+            audioManager.PlayOverworldAudio();
+            audioManager.menuMusic.Stop();
+        }
+
+        //Test of pause Function
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            isGameRunning = false;
+            pauseMenu.SetActive(true);
+            audioManager.StopOverworldAudio();
+            audioManager.menuMusic.Play();
+        }
+
+        //Test of quit Function
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            isGameRunning = false;
+            mainMenu.SetActive(true);
+            audioManager.StopOverworldAudio();
+            audioManager.menuMusic.Play();
+            gameTimeRemaining = totalGameTime; // reset timer
+            player.playerLivesRemaining = player.playerTotalLives; // reset lives
+            UpdateScore(-currentScore); // reset score
         }
 
 
@@ -79,7 +104,7 @@ public class GameManager : MonoBehaviour
                 isGameRunning = false;
                 // Do More special effects + handle audio
                 audioManager.PlayAudio(audioManager.roosterCrow, 1f);
-                audioManager.StopAudio();
+                audioManager.StopOverworldAudio();
 
                 playerObject.SetActive(false);
             }

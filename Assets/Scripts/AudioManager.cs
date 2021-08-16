@@ -7,6 +7,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource audioSource;
     public AudioSource overworldMusic;
     public AudioSource atmosphereSound;
+    public AudioSource menuMusic;
     public AudioClip moveSound;
     public AudioClip deathSound;
     public AudioClip drownSound;
@@ -37,9 +38,15 @@ public class AudioManager : MonoBehaviour
         audioSource.PlayOneShot(sound);
     }
 
-    public void StopAudio()
+    public void StopOverworldAudio()
     {
         overworldMusic.Stop();
         atmosphereSound.Stop();
+    }
+
+    public void PlayOverworldAudio()
+    {
+        overworldMusic.Play();
+        atmosphereSound.Play();
     }
 }
