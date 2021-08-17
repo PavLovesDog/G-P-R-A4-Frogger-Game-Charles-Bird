@@ -41,8 +41,10 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, // x
                                           player.transform.position + offset, // y
                                           Time.deltaTime * focusSpeed); // speed
-
-        FadingLight();
+        if (gameManager.isGameRunning && !gameManager.isGamePaused)
+        {
+            FadingLight(); // set the sun!
+        }
     }
 
     private void cameraBoundry()

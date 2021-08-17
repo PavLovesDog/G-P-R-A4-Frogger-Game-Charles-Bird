@@ -91,48 +91,47 @@ public class Player : MonoBehaviour
         //Move player towards its movepoint, smoothly
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
-
-        //if player is at movepoint, or almost at
-        if (Vector3.Distance(transform.position, movePoint.position) <= 0.025f)
+        if (gameManager.isGameRunning)
         {
-            //Check if button is being pressed
-            if (Mathf.Abs(xMovement) == 1f) // X axis, use absolute value to check for left or right (1 or -1)
+            //if player is at movepoint, or almost at
+            if (Vector3.Distance(transform.position, movePoint.position) <= 0.025f)
             {
-                // Play AudioSource
-                audioManager.PlayAudio(audioManager.moveSound, moveVolume);
-
-                //Check if colliders block path ////////////MAY NEED TO REMOVE
-                if (!Physics2D.OverlapCircle(movePoint.position + incrementX, 0.2f, StopsMovement)) // if there is NOT a collider ahead, we may move
+                //Check if button is being pressed
+                if (Mathf.Abs(xMovement) == 1f) // X axis, use absolute value to check for left or right (1 or -1)
                 {
-                    //Move movePoint to new location,
-                    movePoint.position += incrementX;
+                    // Play AudioSource
+                    audioManager.PlayAudio(audioManager.moveSound, moveVolume);
 
-                    //speed up on log to compensate for moving parent object
-                    if (isOnLog)
+                    //Check if colliders block path ////////////MAY NEED TO REMOVE
+                    if (!Physics2D.OverlapCircle(movePoint.position + incrementX, 0.2f, StopsMovement)) // if there is NOT a collider ahead, we may move
                     {
-                        moveSpeed = 10f;
-                    }
-                    else
-                    {
-                        moveSpeed = 5f; // reset to regular value when not on log
-                    }
-                }
-            } // CAN ADD AN ELSE IF HERE TO STOP DIAGONAL MOVEMENT
+                        //Move movePoint to new location,
+                        movePoint.position += incrementX;
 
-            if (Mathf.Abs(yMovement) == 1f) // Y axis
-            {
-                // Play AudioSource
-                audioManager.PlayAudio(audioManager.moveSound, moveVolume);
+                        //speed up on log to compensate for moving parent object
+                        if (isOnLog)
+                        {
+                            moveSpeed = 10f;
+                        }
+                        else
+                        {
+                            moveSpeed = 5f; // reset to regular value when not on log
+                        }
+                    }
+                } // CAN ADD AN ELSE IF HERE TO STOP DIAGONAL MOVEMENT
 
-                if (!Physics2D.OverlapCircle(movePoint.position + incrementY, 0.2f, StopsMovement))
+                if (Mathf.Abs(yMovement) == 1f) // Y axis
                 {
-                    movePoint.position += incrementY;
+                    // Play AudioSource
+                    audioManager.PlayAudio(audioManager.moveSound, moveVolume);
+
+                    if (!Physics2D.OverlapCircle(movePoint.position + incrementY, 0.2f, StopsMovement))
+                    {
+                        movePoint.position += incrementY;
+                    }
                 }
             }
         }
-
-        //----------------------------------------------------------------------------------------------
-
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -286,15 +285,22 @@ public class Player : MonoBehaviour
     {
         //Audio
         audioManager.PlayAudio(audioManager.gateClosed, 2f);
+
+        // Score
+        gameManager.UpdateScore(50);
+
         // Check for last door
         if (gatesLeft == 0)
         {
             //End game, YOU WIN!
+            //TODO CREATE WIN MESSAGE AND DISPLAY! and display score
             audioManager.PlayAudio(audioManager.victory, 2f);
             audioManager.StopOverworldAudio();
+            gameManager.UpdateScore(1000); // game win score
         }
         // reset player
         StartCoroutine("FinishDelay");
+
         //remove a soldier from start area
         if (gatesLeft >= 1)
         {
@@ -303,7 +309,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            gameObject.SetActive(false); // removes player as he is the last!
         }
     }
 
@@ -315,12 +321,14 @@ public class Player : MonoBehaviour
             transform.position = startingPosition;
             movePoint.position = startingPosition;
         }
-        else // if no lives left
+        else if (playerLivesRemaining == 0)// if no lives left
         {
+            //TODO CREATE LOSE MESSAGE AND DISPLAY! also display score and 'q' to quit
+            playerIsAlive = false;
             gameObject.SetActive(false);
-            gameManager.isGameRunning = false;
             audioManager.PlayAudio(audioManager.GameOver, 1f);
             audioManager.StopOverworldAudio();
+            gameManager.isGameRunning = false;
         }
     }
 
