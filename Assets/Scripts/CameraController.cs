@@ -75,6 +75,20 @@ public class CameraController : MonoBehaviour
     {
         // Fading light
         sunsetTime += Time.deltaTime;
+
+        //Reset for quit
+        if (sunsetTime < 10)
+        {
+            // set all colours inactive
+            sunsetColour[0].SetActive(false);
+            sunsetColour[1].SetActive(false);
+            sunsetColour[2].SetActive(false);
+            sunsetColour[3].SetActive(false);
+            sunsetColour[4].SetActive(false);
+            sunsetColour[5].SetActive(false);
+        }
+
+
         if (sunsetTime > 40f)
         {
             // early yellow sky

@@ -60,5 +60,20 @@ public class PlayerAnimationController : MonoBehaviour
         {
             playerAnim.SetBool("isDead", true);
         }
+        else
+        {
+            playerAnim.SetBool("isDead", false);
+        }
+
+        //set bool for death anim
+        if (player.playerLivesRemaining > 0)
+        {
+            player.playerIsAlive = true;
+        }
+        else
+        {
+            player.playerIsAlive = false;
+        }
+
     }
 }

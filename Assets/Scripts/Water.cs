@@ -6,18 +6,10 @@ public class Water : MonoBehaviour
 {
     public Player playerScript; // reference to player script
     public GameObject player;
-    public Transform playerMovePoint;
-    public Collider2D playerCollider;
+    public Transform playerMovePoint; 
     public AudioManager audioManager;
     public GameManager gameManager;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerCollider = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>();
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (gameManager.isGameRunning) // only do check if game is running
@@ -33,7 +25,7 @@ public class Water : MonoBehaviour
                 }
                 else if (playerScript.isOnLog)
                 {
-                    player.SetActive(true); // catch 
+                    player.SetActive(true); // catch, to alwyas have player active if within rules 
                 }
             }
         }

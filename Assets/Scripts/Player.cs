@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEditor.ShortcutManagement;
 using UnityEngine;
+using TMPro;
 
 /// <summary>
 /// This script must be used as the core Player script for managing the player character in the game.
@@ -9,11 +10,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Player")]
-    public string playerName = ""; //The players name for the purpose of storing the high score
-    public int playerTotalLives; //Players total possible lives.
-    public int playerLivesRemaining; //PLayers actual lives remaining.
-    public bool playerIsAlive = true; //Is the player currently alive?
-    public bool playerCanMove = false; //Can the player currently move?
+    public string playerName = "";
+    public int playerTotalLives;
+    public int playerLivesRemaining;
+    public bool playerIsAlive = true;
+    public bool playerCanMove = false;
     public int facingDirection;
     public float moveSpeed = 5f;
     public float moveVolume = 0.5f;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour
     public LayerMask StopsMovement; // layer mask to check for colliderable objects the player cant move on
     public GameManager gameManager;
     public GameObject deathParticles;
+    public GameObject bonusArea;
 
     [Header("End Zone References")]
     public int gatesLeft = 5;
@@ -32,16 +34,27 @@ public class Player : MonoBehaviour
     public GameObject flagPrefab;
     public GameObject soldierPrefab;
     public GameObject[] soldiers;
-    public List<GameObject> frogSoldiers = new List<GameObject>(); 
+    public GameObject winScreen;
+    public GameObject loseScreen;
+    public TMP_Text winScoreText;
+    public TMP_Text loseScoreText;
+    public bool end1Open;// = true;
+    public bool end2Open;// = true;
+    public bool end3Open;// = true;
+    public bool end4Open;// = true;
+    public bool end5Open;// = true;
 
     [Header("Water Crossing")]
     public Water water;
     public bool isOnLog;
-    public GameObject[] logs;
 
     [Header("Audio")]
     public AudioManager audioManager;
-    
+
+    private void Awake()
+    {
+        OpenFinishGates(); // ensure bools are set to true
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -58,10 +71,11 @@ public class Player : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //-----------------------------------------------------------------------Player movemnet!
+    {   
+        // invoke player boundry
         playerBoundry();
-
+       
+        //-----------------------------------------------------------------------Player movement!
         // set up move variables
         float xMovement = 0f;
         float yMovement = 0f;
@@ -85,13 +99,14 @@ public class Player : MonoBehaviour
         Vector3 incrementX = new Vector3(xMovement, 0, 0);
         Vector3 incrementY = new Vector3(0, yMovement, 0);
 
-        // Grid Based Movement Code lines 54 - 74
+        // Grid Based Movement Code lines 109 - 148
         // Source by gamesplusjames: https://www.youtube.com/watch?v=mbzXIOKZurA&t=96s
 
         //Move player towards its movepoint, smoothly
         transform.position = Vector3.MoveTowards(transform.position, movePoint.position, moveSpeed * Time.deltaTime);
 
-        if (gameManager.isGameRunning)
+        // Handle player movement
+        if (gameManager.isGameRunning && !gameManager.isGamePaused)
         {
             //if player is at movepoint, or almost at
             if (Vector3.Distance(transform.position, movePoint.position) <= 0.025f)
@@ -133,30 +148,32 @@ public class Player : MonoBehaviour
             }
         }
     }
+    //-----------------------------------------------------------------------Player movement END
+
+    // COLLISIONS ------------------------------------------------------------------------------
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // What happens if player collide with Vehicles
         if (collision.gameObject.CompareTag("Vehicle"))
         {
-            //Minus life here and handle auio + visual
             playerLivesRemaining--;
             Instantiate(deathParticles, transform.position, Quaternion.identity);
             audioManager.PlayAudio(audioManager.deathSound, 1f); // Audio is set up through the Audio Manager gameobject because audio cannot play from unactive gameobjects
-
-            CheckLivesRemaining();
+            CheckLivesRemaining(); // perform lives remaining check
         }
 
+        // What happens when players pick up coins!
         if (collision.gameObject.CompareTag("Coin"))
         {
             gameManager.CollectBonus(25, collision.transform.position);
             Destroy(collision.gameObject);
-            //spawn effect
-            //play sound
         }
 
+        // What happens when player finds the bonus
         if (collision.gameObject.CompareTag("Bonus"))
         {
-            gameManager.CollectBonus(50, collision.transform.position);
+            StartCoroutine("BonusDelay");
         }
     }
 
@@ -170,8 +187,10 @@ public class Player : MonoBehaviour
             movePoint.transform.parent = collision.transform; // frog becomes child of log and moves with it
         }
 
+        // Ending Position collisions -----------------------------------------------------------------START
+
         //DOOR 1
-        if (collision.gameObject.CompareTag("Finish 1"))
+        if (end1Open && collision.gameObject.CompareTag("Finish 1"))
         {
             //Decrement finish spots left
             gatesLeft--;
@@ -180,49 +199,45 @@ public class Player : MonoBehaviour
             gameManager.UpdateScore(20);
             //check gates left
             FinishGateCheck();
+            // shut bool, player can no longer win through this gate
+            end1Open = false; 
         }
+ 
 
         //DOOR 2
-        if (collision.gameObject.CompareTag("Finish 2"))
+        if (end2Open && collision.gameObject.CompareTag("Finish 2"))
         {
-            //Decrement finish spots left
             gatesLeft--;
-            Instantiate(doorPrefab, endPos[1], transform.rotation); // shut door and save
-            //Add score
+            Instantiate(doorPrefab, endPos[1], transform.rotation);
             gameManager.UpdateScore(20);
-            //check gates left
             FinishGateCheck();
+            end2Open = false;
         }
 
         //DOOR 3
-        if (collision.gameObject.CompareTag("Finish 3"))
+        if (end3Open && collision.gameObject.CompareTag("Finish 3"))
         {
-            //Decrement finish spots left
             gatesLeft--;
-            Instantiate(doorPrefab, endPos[2], transform.rotation); // shut door and save
-            //Add score
+            Instantiate(doorPrefab, endPos[2], transform.rotation);
             gameManager.UpdateScore(20);
-            //check gates left
             FinishGateCheck();
+            end3Open = false;
         }
 
         //DOOR 4
-        if (collision.gameObject.CompareTag("Finish 4"))
+        if (end4Open && collision.gameObject.CompareTag("Finish 4"))
         {
-            //Decrement finish spots left
             gatesLeft--;
             Instantiate(flagPrefab, endPos[3], transform.rotation); // raise flag and save
-            //Add score
             gameManager.UpdateScore(20);
-            //check gates left
             FinishGateCheck();
-  
             // instantiate frog night atop the tower LEFT
-            Instantiate(soldierPrefab, new Vector3(-3.5f, 18, 10), transform.rotation);
+            Instantiate(soldierPrefab, new Vector3(-3.5f, 18.25f, 10), transform.rotation);
+            end4Open = false;   
         }
 
         //DOOR 5
-        if (collision.gameObject.CompareTag("Finish 5"))
+        if (end5Open && collision.gameObject.CompareTag("Finish 5"))
         {
             //Decrement finish spots left
             gatesLeft--;
@@ -231,22 +246,26 @@ public class Player : MonoBehaviour
             gameManager.UpdateScore(20);
             //check gates left
             FinishGateCheck();
-           
             // instantiate frog night atop the tower RIGHT
-            Instantiate(soldierPrefab, new Vector3(3.5f, 18, 10), transform.rotation);
+            Instantiate(soldierPrefab, new Vector3(3.5f, 18.25f, 10), transform.rotation);
+            end5Open = false;
         }
+
+        // Ending Position collisions -------------------------------------------------------------------END
     }
 
+    // collision check to keep bool active while on log
     private void OnTriggerStay2D(Collider2D collision)
     {
         //collision with log
         if (collision.gameObject.CompareTag("Log"))
         {
             isOnLog = true;
-
         }
     }
 
+    // Collision check to detach player from log
+    // and switch bool on exit of collider
     private void OnTriggerExit2D(Collider2D collision)
     {
         //collision with log
@@ -257,6 +276,7 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Function to ensure player stays within the game borders
     private void playerBoundry()
     {
         //Right bounds
@@ -281,24 +301,32 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Function handles what happens when player collides with
+    // finish point, checks for if the player is passing the final gate
     void FinishGateCheck()
     {
-        //Audio
-        audioManager.PlayAudio(audioManager.gateClosed, 2f);
-
-        // Score
-        gameManager.UpdateScore(50);
+        audioManager.PlayAudio(audioManager.gateClosed, 2f); //Audio
+        gameManager.UpdateScore(50); // Score
 
         // Check for last door
         if (gatesLeft == 0)
         {
             //End game, YOU WIN!
-            //TODO CREATE WIN MESSAGE AND DISPLAY! and display score
+            winScreen.SetActive(true);
+            winScoreText.text = "Your Score: " + gameManager.currentScore;
             audioManager.PlayAudio(audioManager.victory, 2f);
             audioManager.StopOverworldAudio();
-            gameManager.UpdateScore(1000); // game win score
+            gameManager.UpdateScore(1000); // everyone safely home score bonus!
+            gameManager.isGameRunning = false;
+
+            // update score for unused time
+            if (gameManager.gameTimeRemaining > 0)
+            {
+                gameManager.UpdateScore(Mathf.FloorToInt(gameManager.gameTimeRemaining * 10));
+            }
         }
-        // reset player
+
+        // reset player with delay. this "feels" better than immediately teleporting
         StartCoroutine("FinishDelay");
 
         //remove a soldier from start area
@@ -313,6 +341,8 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Checks how many lives player has left and either
+    // resets player position or ends the game
     public void CheckLivesRemaining()
     {
         if (playerLivesRemaining > 0)
@@ -320,10 +350,13 @@ public class Player : MonoBehaviour
             //reset position if lives left
             transform.position = startingPosition;
             movePoint.position = startingPosition;
+            playerIsAlive = true;
         }
         else if (playerLivesRemaining == 0)// if no lives left
         {
-            //TODO CREATE LOSE MESSAGE AND DISPLAY! also display score and 'q' to quit
+            //End game, You Lose
+            loseScreen.SetActive(true);
+            loseScoreText.text = "Your Score: " + gameManager.currentScore;
             playerIsAlive = false;
             gameObject.SetActive(false);
             audioManager.PlayAudio(audioManager.GameOver, 1f);
@@ -332,10 +365,34 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Function to reopenbools for finish gates
+    public void OpenFinishGates()
+    {
+        // set gate bools
+        end1Open = true;
+        end2Open = true;
+        end3Open = true;
+        end4Open = true;
+        end5Open = true;
+    }
+
+    // Source Code derived from: https://docs.unity3d.com/ScriptReference/MonoBehaviour.StartCoroutine.html
+    // a coroutine to delay players reset upon returning frog home
     IEnumerator FinishDelay()
     {
         yield return new WaitForSeconds(0.5f);
         transform.position = startingPosition;
         movePoint.position = startingPosition;
+    }
+
+    // a coroutine to delay the rate at which the player
+    // can recieve the bonus points
+    IEnumerator BonusDelay()
+    {
+        gameManager.CollectBonus(50, transform.position); // update score wherever he at
+        bonusArea.SetActive(false);
+        yield return new WaitForSeconds(5f);
+        bonusArea.SetActive(true);
+        StopCoroutine("BonusDelay");
     }
 }

@@ -13,21 +13,21 @@ public class Vehicle1 : MonoBehaviour
     public Vector2 endPosition; //This variablle is to be used to indicate the final destination of the vehicle.
 
     //An array of starting positions, matched with log positions visually, used to reset game
-    public Vector2[] startingPositions = { new Vector2(-25, 11.5f), new Vector2(-13.5f, 11.5f), // lane 12, start left INDEX: 0, 1
-                                           new Vector2(13.5f, 10.5f), new Vector2(22.5f, 10.5f), new Vector2(31.5f, 10.5f), // lane 11, start right INDEX: 2, 3, 4
-                                           new Vector2(-29.5f, 9.5f), new Vector2(-21.5f, 9.5f), new Vector2(-13.5f, 9.5f), //lane 10, INDEX: 5, 6, 7
-                                           new Vector2(13.5f, 8.5f), new Vector2(26, 8.5f), // lane 9, INDEX: 8, 9
-                                           new Vector2(-33.5f, 7.5f), new Vector2(-28.5f, 7.5f), new Vector2(-18.5f, 7.5f), new Vector2(-13.5f, 7.5f), // lane 8, INDEX: 10, 11, 12, 13
-                                           new Vector2(13.5f, 6.5f), new Vector2(17.5f, 6.5f), new Vector2(21.5f, 6.5f), new Vector2(25.5f, 6.5f), new Vector2(29.5f, 6.5f), new Vector2(33.5f, 6.5f), new Vector2(37.5f,6.5f), // lane 7 INDEX: 14, 15, 16, 17, 18, 19, 20
-                                           new Vector2(-23.5f, 0.5f), new Vector2(-17.5f, 0.5f), new Vector2(-11.5f, 0.5f), // lane 6 INDEX: 21, 22, 23
-                                           new Vector2(11.5f, -0.5f), new Vector2(18.5f, -0.5f), new Vector2(25.5f, -0.5f), // lane 5 INDEX: 24, 25, 26
-                                           new Vector2(-22.5f, -1.5f), new Vector2(-11.5f, -1.5f), // lane 4, INDEX: 27, 28
-                                           new Vector2(-11.5f, -2.5f), // lane 3 INDEX: 29
-                                           new Vector2(11.5f, -3.5f), new Vector2(19.5f, -3.5f), new Vector2(28.5f, -3.5f), // lane 2 INDEX 30, 31, 32
-                                           new Vector2(-23.5f, -4.5f), new Vector2(-20.5f, -4.5f), new Vector2(-14.5f, -4.5f), new Vector2(-11.5f, -4.5f), //lane 1 INDEX: 33, 34, 35, 36
+    public Vector2[] startingPositions = { new Vector2(-25, 11.5f), new Vector2(-13.5f, 11.5f),
+                                           new Vector2(13.5f, 10.5f), new Vector2(22.5f, 10.5f), new Vector2(31.5f, 10.5f),
+                                           new Vector2(-29.5f, 9.5f), new Vector2(-21.5f, 9.5f), new Vector2(-13.5f, 9.5f),
+                                           new Vector2(13.5f, 8.5f), new Vector2(26, 8.5f),
+                                           new Vector2(-33.5f, 7.5f), new Vector2(-28.5f, 7.5f), new Vector2(-18.5f, 7.5f), new Vector2(-13.5f, 7.5f),
+                                           new Vector2(13.5f, 6.5f), new Vector2(17.5f, 6.5f), new Vector2(21.5f, 6.5f), new Vector2(25.5f, 6.5f), new Vector2(29.5f, 6.5f), new Vector2(33.5f, 6.5f), new Vector2(37.5f,6.5f),
+                                           new Vector2(-23.5f, 0.5f), new Vector2(-17.5f, 0.5f), new Vector2(-11.5f, 0.5f),
+                                           new Vector2(11.5f, -0.5f), new Vector2(18.5f, -0.5f), new Vector2(25.5f, -0.5f),
+                                           new Vector2(-22.5f, -1.5f), new Vector2(-11.5f, -1.5f),
+                                           new Vector2(-11.5f, -2.5f),
+                                           new Vector2(11.5f, -3.5f), new Vector2(19.5f, -3.5f), new Vector2(28.5f, -3.5f),
+                                           new Vector2(-23.5f, -4.5f), new Vector2(-20.5f, -4.5f), new Vector2(-14.5f, -4.5f), new Vector2(-11.5f, -4.5f),
     };
-
-    // INDEX:12       0, 1
+    //          INDEX:
+    // lane 12        0, 1
     // lane 11        2, 3, 4
     // lane 10        5, 6, 7
     // lane 9         8, 9
@@ -71,7 +71,6 @@ public class Vehicle1 : MonoBehaviour
                 if (moveDirection == 1)
                 {
                     //Travel right
-                    //vehicleRb.velocity = new Vector2(moveDirection * speed, vehicleRb.velocity.y);
                     transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
 
                     //Once hit otherside, disable object/destroy
@@ -83,7 +82,6 @@ public class Vehicle1 : MonoBehaviour
                 else // if move direction not 1 (i.e. -1)
                 {
                     //travel left
-                    //vehicleRb.velocity = new Vector2(moveDirection * speed, vehicleRb.velocity.y);
                     transform.Translate(-Vector3.right * speed * Time.deltaTime, Space.World);
 
                     //Once hit otherside, disable object/destroy
@@ -93,10 +91,6 @@ public class Vehicle1 : MonoBehaviour
                     }
                 }
             } 
-            else // if paused
-            {
-               // do Nothing, this will pause vehicles and everything else
-            }
         }
         else if (!gameManager.isGameRunning && playerSript.playerLivesRemaining == 0) // if player is dead
         {
