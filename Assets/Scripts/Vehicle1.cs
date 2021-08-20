@@ -26,6 +26,8 @@ public class Vehicle1 : MonoBehaviour
                                            new Vector2(11.5f, -3.5f), new Vector2(19.5f, -3.5f), new Vector2(28.5f, -3.5f),
                                            new Vector2(-23.5f, -4.5f), new Vector2(-20.5f, -4.5f), new Vector2(-14.5f, -4.5f), new Vector2(-11.5f, -4.5f),
     };
+
+    // ---- Visual Representation of mapped locations above ----
     //          INDEX:
     // lane 12        0, 1
     // lane 11        2, 3, 4
@@ -47,8 +49,6 @@ public class Vehicle1 : MonoBehaviour
 
     void Start()
     {
-        //vehicleCanMove = true;
-
         if(spawnPosition.x < 0)
         {
             moveDirection = 1;
@@ -70,8 +70,7 @@ public class Vehicle1 : MonoBehaviour
             {
                 if (moveDirection == 1)
                 {
-                    //Travel right
-                    //transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
+                    // Find speed and travel right
                     GetDifficulty();
 
                     //Once hit otherside, disable object/destroy
@@ -82,8 +81,7 @@ public class Vehicle1 : MonoBehaviour
                 }
                 else // if move direction not 1 (i.e. -1)
                 {
-                    //travel left
-                    //transform.Translate(-Vector3.right * speed * Time.deltaTime, Space.World);
+                    // find speed and travel left
                     GetDifficulty();
 
                     //Once hit otherside, disable object/destroy
@@ -119,6 +117,8 @@ public class Vehicle1 : MonoBehaviour
         }
     }
 
+    // A function which sets vehicle/log speed dependent on
+    // move direction and difficulty setting.
     public void GetDifficulty()
     {
         // travel right

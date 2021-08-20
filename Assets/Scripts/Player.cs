@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     public GameObject loseScreen;
     public TMP_Text winScoreText;
     public TMP_Text loseScoreText;
+    // Bools to handle one-time checks for game round
     public bool end1Open;
     public bool end2Open;
     public bool end3Open;
@@ -55,7 +56,6 @@ public class Player : MonoBehaviour
         OpenFinishGates(); // ensure bools are set to true
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         // set the myGameManager
@@ -68,7 +68,6 @@ public class Player : MonoBehaviour
         playerLivesRemaining = playerTotalLives;
     }
 
-    // Update is called once per frame
     void Update()
     {   
         // invoke player boundry

@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour
     public SpriteRenderer sunset;
     public float sunsetTime = 0f;
     public GameObject[] sunsetColour;
-    
 
     [Header("Camera Settings")]
     public Vector3 offset;
@@ -24,13 +23,11 @@ public class CameraController : MonoBehaviour
     public float camConstraintLeft; //The maximum negative X value of the playable space.
     public float camConstraintRight; //The maximum positive X value of the playablle space.
 
-    // Start is called before the first frame update
     void Start()
     {
         sunset = sunset.GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Source code found: https://docs.unity3d.com/ScriptReference/MonoBehaviour.Invoke.html
@@ -71,6 +68,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    // Function which handles activation and deactivation of sunset colour overlays
     void FadingLight()
     {
         // Fading light
@@ -80,14 +78,11 @@ public class CameraController : MonoBehaviour
         if (sunsetTime < 10)
         {
             // set all colours inactive
-            sunsetColour[0].SetActive(false);
-            sunsetColour[1].SetActive(false);
-            sunsetColour[2].SetActive(false);
-            sunsetColour[3].SetActive(false);
-            sunsetColour[4].SetActive(false);
-            sunsetColour[5].SetActive(false);
+            for (int i = 0; i < 6; i++)
+            {
+                sunsetColour[i].SetActive(false);
+            }
         }
-
 
         if (sunsetTime > 40f)
         {

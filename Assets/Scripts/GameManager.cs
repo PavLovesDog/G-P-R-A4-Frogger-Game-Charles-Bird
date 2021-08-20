@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Script References")]
     public Player player;
+    public GameObject playerObject; // player object reference
     public Vehicle1 vehicleScript;
-    public GameObject playerObject;
     public AudioManager audioManager;
     public CameraController cameraScript;
 
@@ -300,8 +300,16 @@ public class GameManager : MonoBehaviour
         audioManager.menuMusic.Stop();
         // reset vehicles
         resetVehicles();
+
+        //reset knights
+        for (int i =0; i < 4; i++)
+        {
+            player.soldiers[i].SetActive(true);
+        }
+
         //Reset exits
         player.OpenFinishGates();
+        player.gatesLeft = 5;
         player.loseScreen.SetActive(false); // turn off lose screen, if any
 
         // Handle if players choose "Play Again" feature from win/lose message

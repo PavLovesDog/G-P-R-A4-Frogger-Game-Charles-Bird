@@ -31,6 +31,8 @@ public class Water : MonoBehaviour
         }
     }
 
+
+    // A coroutine to handle when players come in contact with water collider
     IEnumerator waitBeforeKill()
     {
         yield return new WaitForSeconds(0.05f); // given player a chance to get back on log
