@@ -13,6 +13,8 @@ public class DeleteGate : MonoBehaviour
 
     void Update()
     {
+        // Deletes the object once the game ends
+        // This script is soley for continuity on game restart
         if (!gameManager.isGameRunning)
         {
             Destroy(gameObject);

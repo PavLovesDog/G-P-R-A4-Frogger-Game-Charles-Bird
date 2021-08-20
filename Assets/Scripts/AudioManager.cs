@@ -35,7 +35,6 @@ public class AudioManager : MonoBehaviour
         audioSource.clip = sound;
         audioSource.pitch = Random.Range(0.75f, 1f);
         audioSource.volume = volume;
-        //audioSource.Play();
         audioSource.PlayOneShot(sound);
     }
 

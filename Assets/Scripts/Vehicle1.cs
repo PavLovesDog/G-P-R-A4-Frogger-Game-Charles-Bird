@@ -12,8 +12,6 @@ public class Vehicle1 : MonoBehaviour
     public Vector2 spawnPosition; //This variable is to be used to indicate where on the map the vehicle starts (or spawns)
     public Vector2 endPosition; //This variablle is to be used to indicate the final destination of the vehicle.
 
-    public int difficulty;
-
     //An array of starting positions, matched with log positions visually, used to reset game
     public Vector2[] startingPositions = { new Vector2(-25, 11.5f), new Vector2(-13.5f, 11.5f),
                                            new Vector2(13.5f, 10.5f), new Vector2(22.5f, 10.5f), new Vector2(31.5f, 10.5f),
@@ -73,7 +71,8 @@ public class Vehicle1 : MonoBehaviour
                 if (moveDirection == 1)
                 {
                     //Travel right
-                    transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
+                    //transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
+                    GetDifficulty();
 
                     //Once hit otherside, disable object/destroy
                     if (currentPosition.x > endPosition.x)
@@ -84,7 +83,8 @@ public class Vehicle1 : MonoBehaviour
                 else // if move direction not 1 (i.e. -1)
                 {
                     //travel left
-                    transform.Translate(-Vector3.right * speed * Time.deltaTime, Space.World);
+                    //transform.Translate(-Vector3.right * speed * Time.deltaTime, Space.World);
+                    GetDifficulty();
 
                     //Once hit otherside, disable object/destroy
                     if (currentPosition.x < endPosition.x)
@@ -121,6 +121,32 @@ public class Vehicle1 : MonoBehaviour
 
     public void GetDifficulty()
     {
+        // travel right
+        if (gameManager.difficulty == 1 && moveDirection == 1) // easy
+        {
+            transform.Translate(Vector3.right * (speed * 0.75f) * Time.deltaTime, Space.World);
+        }
+        else if (gameManager.difficulty == 2 && moveDirection == 1) // medium
+        {
+            transform.Translate(Vector3.right * speed * Time.deltaTime, Space.World);
+        }
+        else if (gameManager.difficulty == 3 && moveDirection == 1) // hard
+        {
+            transform.Translate(Vector3.right * (speed * 1.5f) * Time.deltaTime, Space.World);
+        }
 
+        //travel left
+        if (gameManager.difficulty == 1 && moveDirection == -1) // easy
+        {
+            transform.Translate(-Vector3.right * (speed * 0.75f) * Time.deltaTime, Space.World);
+        }
+        else if (gameManager.difficulty == 2 && moveDirection == -1) // medium
+        {
+            transform.Translate(-Vector3.right * speed * Time.deltaTime, Space.World);
+        }
+        else if (gameManager.difficulty == 3 && moveDirection == -1) // hard
+        {
+            transform.Translate(-Vector3.right * (speed * 1.5f) * Time.deltaTime, Space.World);
+        }
     }
 }

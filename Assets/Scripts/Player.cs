@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 using TMPro;
 
@@ -38,11 +37,11 @@ public class Player : MonoBehaviour
     public GameObject loseScreen;
     public TMP_Text winScoreText;
     public TMP_Text loseScoreText;
-    public bool end1Open;// = true;
-    public bool end2Open;// = true;
-    public bool end3Open;// = true;
-    public bool end4Open;// = true;
-    public bool end5Open;// = true;
+    public bool end1Open;
+    public bool end2Open;
+    public bool end3Open;
+    public bool end4Open;
+    public bool end5Open;
 
     [Header("Water Crossing")]
     public Water water;

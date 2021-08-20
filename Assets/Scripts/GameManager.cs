@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public float levelConstraintRight; //The maximum positive X value of the playablle space.
 
     [Header("Gameplay Loop")]
+    public int difficulty;
     public bool isGameRunning;
     public bool isGamePaused;
     bool trigger = true; // for intro timer switch
@@ -38,6 +39,7 @@ public class GameManager : MonoBehaviour
     public GameObject mainMenu;
     public GameObject pauseMenu;
     public GameObject controlSchemeMenu;
+    public GameObject difficultyMenu;
     public GameObject preMessage;
     public TMP_Text timerText;
     public TMP_Text preTimerText;
@@ -350,6 +352,37 @@ public class GameManager : MonoBehaviour
     public void OnExitButtonPress()
     {
         Application.Quit(); // quit appllication
+    }
+
+    // Function for "Difficulty" button
+    // displays the difficulty selection screen 
+    public void OnDifficultyPress()
+    {
+        // set difficulty menu active
+        difficultyMenu.SetActive(true);
+    }
+
+    // Difficulty settings ----------------------------
+    // sets the game difficulty integer to 1
+    public void SetEasy()
+    {
+        difficulty = 1;
+        // set difficulty inactive
+        difficultyMenu.SetActive(false);
+    }
+    // sets the game difficulty integer to 2
+    public void SetMedium()
+    {
+        difficulty = 2;
+        // set difficulty inactive
+        difficultyMenu.SetActive(false);
+    }
+    // sets the game difficulty integer to 3
+    public void SetHard()
+    {
+        difficulty = 3;
+        // set difficulty inactive
+        difficultyMenu.SetActive(false);
     }
 }
 

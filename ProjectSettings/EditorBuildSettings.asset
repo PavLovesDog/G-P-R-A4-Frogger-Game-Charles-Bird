@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Charlies Frogger.unity
+    guid: 447313595c9f98a48a07b9567b7180e1
   m_configObjects: {}
