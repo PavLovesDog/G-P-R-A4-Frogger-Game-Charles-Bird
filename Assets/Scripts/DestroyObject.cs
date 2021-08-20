@@ -10,7 +10,7 @@ public class DestroyObject : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        // for time dependent objects
+        // for time dependent objects, set time in editor for specific item
         if (timer<= 0)
         {
             Destroy(gameObject);

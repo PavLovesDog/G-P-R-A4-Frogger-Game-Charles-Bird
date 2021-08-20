@@ -12,6 +12,8 @@ public class Vehicle1 : MonoBehaviour
     public Vector2 spawnPosition; //This variable is to be used to indicate where on the map the vehicle starts (or spawns)
     public Vector2 endPosition; //This variablle is to be used to indicate the final destination of the vehicle.
 
+    public int difficulty;
+
     //An array of starting positions, matched with log positions visually, used to reset game
     public Vector2[] startingPositions = { new Vector2(-25, 11.5f), new Vector2(-13.5f, 11.5f),
                                            new Vector2(13.5f, 10.5f), new Vector2(22.5f, 10.5f), new Vector2(31.5f, 10.5f),
@@ -115,5 +117,10 @@ public class Vehicle1 : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void GetDifficulty()
+    {
+
     }
 }

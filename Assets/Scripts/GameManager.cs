@@ -269,6 +269,8 @@ public class GameManager : MonoBehaviour
         mainMenu.SetActive(true);
         audioManager.StopOverworldAudio();
         audioManager.menuMusic.Play();
+
+        //Reset Game operations 
         //reset player position & player if dead
         player.transform.position = player.startingPosition;
         player.movePoint.transform.position = player.startingPosition;
@@ -299,6 +301,20 @@ public class GameManager : MonoBehaviour
         //Reset exits
         player.OpenFinishGates();
         player.loseScreen.SetActive(false); // turn off lose screen, if any
+
+        // Handle if players choose "Play Again" feature from win/lose message
+        player.transform.position = player.startingPosition;
+        player.movePoint.transform.position = player.startingPosition;
+        player.gameObject.SetActive(true);
+        player.playerLivesRemaining = player.playerTotalLives; //reset player lives
+        UpdateScore(-currentScore); //reset score
+        //reset timers
+        preMessage.SetActive(true);
+        gameTimeRemaining = totalGameTime;
+        timer = 5;
+        trigger = true; // reset trigger for gamerunning timer
+        cameraScript.sunsetTime = 0f; // reset sunset timer
+        player.winScreen.SetActive(false); // turn off win screen, if any
 
     }
 

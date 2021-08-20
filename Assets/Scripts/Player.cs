@@ -202,7 +202,6 @@ public class Player : MonoBehaviour
             // shut bool, player can no longer win through this gate
             end1Open = false; 
         }
- 
 
         //DOOR 2
         if (end2Open && collision.gameObject.CompareTag("Finish 2"))
@@ -389,7 +388,7 @@ public class Player : MonoBehaviour
     // can recieve the bonus points
     IEnumerator BonusDelay()
     {
-        gameManager.CollectBonus(50, transform.position); // update score wherever he at
+        gameManager.CollectBonus(200, transform.position); // update score wherever he at
         bonusArea.SetActive(false);
         yield return new WaitForSeconds(5f);
         bonusArea.SetActive(true);

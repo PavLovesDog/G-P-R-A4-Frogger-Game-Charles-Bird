@@ -8,14 +8,12 @@ public class PlayerAnimationController : MonoBehaviour
     public SpriteRenderer playerSprite;
     public Player player;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerAnim = GetComponent<Animator>();
         playerSprite = GetComponent<SpriteRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetAxis("Horizontal") > 0) // if we're pressing right
